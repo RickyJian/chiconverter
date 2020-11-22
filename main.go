@@ -15,7 +15,9 @@ limitations under the License.
 */
 package main
 
-import "github.com/rickyjian/chiconverter/cmd"
+import (
+	"chiconverter/cmd"
+)
 
 func main() {
 	cmd.Execute()
