@@ -48,11 +48,65 @@ func init() {
 	rootCmd.AddCommand(t2tw)
 	rootCmd.AddCommand(t2hk)
 
-	// bind persistence flag
-	rootCmd.PersistentFlags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
-	rootCmd.PersistentFlags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
-	rootCmd.MarkPersistentFlagRequired(source)
-	rootCmd.MarkPersistentFlagRequired(destination)
+	// bind and check s2t flag
+	s2t.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	s2t.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	s2t.MarkFlagRequired(source)
+	s2t.MarkFlagRequired(destination)
+
+	// bind and check t2s flag
+	t2s.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	t2s.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	t2s.MarkFlagRequired(source)
+	t2s.MarkFlagRequired(destination)
+
+	// bind and check s2tw flag
+	s2tw.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	s2tw.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	s2tw.MarkFlagRequired(source)
+	s2tw.MarkFlagRequired(destination)
+
+	// bind and check tw2s flag
+	tw2s.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	tw2s.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	tw2s.MarkFlagRequired(source)
+	tw2s.MarkFlagRequired(destination)
+
+	// bind and check s2hk flag
+	s2hk.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	s2hk.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	s2hk.MarkFlagRequired(source)
+	s2hk.MarkFlagRequired(destination)
+
+	// bind and check hk2s flag
+	hk2s.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	hk2s.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	hk2s.MarkFlagRequired(source)
+	hk2s.MarkFlagRequired(destination)
+
+	// bind and check s2twp flag
+	s2twp.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	s2twp.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	s2twp.MarkFlagRequired(source)
+	s2twp.MarkFlagRequired(destination)
+
+	// bind and check tw2sp flag
+	tw2sp.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	tw2sp.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	tw2sp.MarkFlagRequired(source)
+	tw2sp.MarkFlagRequired(destination)
+
+	// bind and check t2tw flag
+	t2tw.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	t2tw.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	t2tw.MarkFlagRequired(source)
+	t2tw.MarkFlagRequired(destination)
+
+	// bind and check t2hk flag
+	t2hk.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	t2hk.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	t2hk.MarkFlagRequired(source)
+	t2hk.MarkFlagRequired(destination)
 }
 
 // rootCmd represents the base command when called without any subcommands
@@ -64,88 +118,6 @@ var rootCmd = &cobra.Command{
   Traditional(Standard/TW/HK) to Simplified
   Traditional(Standard) to Traditional(TW/HK)
 Default translation is Simplified to Traditional(Standard).`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
-}
-
-var s2t = &cobra.Command{
-	Use:   "s2t",
-	Short: "Convert Simplified Chinese to Traditional Chinese.",
-	Long:  `Convert Simplified Chinese to Traditional Chinese.`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
-}
-
-var t2s = &cobra.Command{
-	Use:   "t2s",
-	Short: "Convert Traditional Chinese to Simplified Chinese.",
-	Long:  `Convert Traditional Chinese to Simplified Chinese.`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
-}
-
-var s2tw = &cobra.Command{
-	Use:   "s2tw",
-	Short: "Convert Simplified Chinese to Traditional Chinese (Taiwan Standard).",
-	Long:  `Convert Simplified Chinese to Traditional Chinese (Taiwan Standard).`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
-}
-
-var tw2s = &cobra.Command{
-	Use:   "s2tw",
-	Short: "Convert Traditional Chinese (Taiwan Standard) to Simplified Chinese.",
-	Long:  `Convert Traditional Chinese (Taiwan Standard) to Simplified Chinese.`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
-}
-
-var s2hk = &cobra.Command{
-	Use:   "s2hk",
-	Short: "Convert Simplified Chinese to Traditional Chinese (Hong Kong Standard).",
-	Long:  `Convert Simplified Chinese to Traditional Chinese (Hong Kong Standard).`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
-}
-
-var hk2s = &cobra.Command{
-	Use:   "s2tw",
-	Short: "Convert Traditional Chinese (Hong Kong Standard) to Simplified Chinese.",
-	Long:  `Convert Traditional Chinese (Hong Kong Standard) to Simplified Chinese.`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
-}
-
-var s2twp = &cobra.Command{
-	Use:   "s2twp",
-	Short: "Convert Simplified Chinese to Traditional Chinese (Taiwan Standard) with Taiwanese idiom.",
-	Long:  `Convert Simplified Chinese to Traditional Chinese (Taiwan Standard) with Taiwanese idiom.`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
-}
-
-var tw2sp = &cobra.Command{
-	Use:   "tw2sp",
-	Short: "Convert Traditional Chinese (Taiwan Standard) to Simplified Chinese with Mainland Chinese idiom.",
-	Long:  `Convert Traditional Chinese (Taiwan Standard) to Simplified Chinese with Mainland Chinese idiom.`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
-}
-
-var t2tw = &cobra.Command{
-	Use:   "tw2sp",
-	Short: "Convert Traditional Chinese (OpenCC Standard) to Taiwan Standard.",
-	Long:  `Convert Traditional Chinese (OpenCC Standard) to Taiwan Standard.`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
-}
-
-var t2hk = &cobra.Command{
-	Use:   "t2hk",
-	Short: "Convert Traditional Chinese (OpenCC Standard) to Hong Kong Standard.",
-	Long:  `Convert Traditional Chinese (OpenCC Standard) to Hong Kong Standard.`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
