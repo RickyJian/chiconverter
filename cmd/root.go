@@ -116,8 +116,7 @@ var rootCmd = &cobra.Command{
 	Long: `A command line tool to convert chinese from
   Simplified to Traditional(Standard/TW/HK)
   Traditional(Standard/TW/HK) to Simplified
-  Traditional(Standard) to Traditional(TW/HK)
-Default translation is Simplified to Traditional(Standard).`,
+  Traditional(Standard) to Traditional(TW/HK).`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
