@@ -2,24 +2,51 @@ package utils
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
-	"strings"
+	"os"
 )
 
-// ReadAll return all text from reader
-func ReadAll(r io.Reader) (string, error) {
-	var builder strings.Builder
-	reader := bufio.NewReader(r)
+var (
+	// MaxFileSize defines max size for reading file
+	MaxFileSize int64 = 1024 * 1024 * 1024
+)
+
+var (
+	// ErrFileOutOfSize describes file out of size
+	ErrFileOutOfSize = errors.New("file out of size")
+	// ErrEmptyFile describes empty file
+	ErrEmptyFile = errors.New("empty file")
+)
+
+// ReadAll read all text from file
+func ReadAll(src string) ([][]byte, error) {
+	file, err := os.Open(src)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	fileStat, err := file.Stat()
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file: %w", err)
+	} else if size := fileStat.Size(); size > MaxFileSize {
+		return nil, ErrFileOutOfSize
+	} else if size == 0 {
+		return nil, ErrEmptyFile
+	}
+
+	reader := bufio.NewReader(file)
+	var text [][]byte
 	for {
-		line, _, err := reader.ReadLine()
+		words, _, err := reader.ReadLine()
 		if err == io.EOF {
 			break
 		} else if err != nil {
-			return "", fmt.Errorf("falied to read text: %v", err)
+			return nil, fmt.Errorf("falied to read text: %w", err)
 		}
-		builder.WriteString(string(line))
-		builder.WriteString("\n")
+		text = append(text, words)
 	}
-	return builder.String(), nil
+	return text, nil
 }

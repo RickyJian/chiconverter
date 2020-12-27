@@ -1,9 +1,6 @@
 package utils
 
 import (
-	"bufio"
-	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,23 +8,37 @@ import (
 
 func TestReadAll(t *testing.T) {
 	var tests = []*struct {
-		text     string
-		expected string
+		src         string
+		expected    [][]byte
+		expectedErr error
 	}{
 		{
-			text: `天地玄黃，宇宙洪荒。`,
-			expected: fmt.Sprintf("%s\n", "天地玄黃，宇宙洪荒。"),
+			src:         "../test/file_empty",
+			expected:    [][]byte{},
+			expectedErr: ErrEmptyFile,
 		},
 		{
-			text: `天地玄黃，宇宙洪荒。
-日月盈昃，辰宿列張。
-寒來暑往，秋收冬藏。`,
-			expected: fmt.Sprintf("%s\n%s\n%s\n", "天地玄黃，宇宙洪荒。", "日月盈昃，辰宿列張。", "寒來暑往，秋收冬藏。"),
+			src: "../test/file_line",
+			expected: [][]byte{
+				[]byte("天地玄黃，宇宙洪荒。"),
+			},
+		},
+		{
+			src: "../test/file_lines",
+			expected: [][]byte{
+				[]byte("天地玄黃，宇宙洪荒。"),
+				[]byte("日月盈昃，辰宿列張。"),
+				[]byte("寒來暑往，秋收冬藏。"),
+			},
 		},
 	}
 	for _, test := range tests {
-		reader := bufio.NewReader(strings.NewReader(test.text))
-		text, _ := ReadAll(reader)
-		assert.Equal(t, test.expected, text)
+		texts, err := ReadAll(test.src)
+		assert.Equal(t, test.expectedErr, err)
+		if err != nil {
+			for i, text := range texts {
+				assert.Equal(t, test.expected[i], text)
+			}
+		}
 	}
 }
