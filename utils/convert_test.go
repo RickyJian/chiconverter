@@ -8,19 +8,19 @@ import (
 
 type mockConvert struct{}
 
-func (m *mockConvert) Convert() (string, error) {
-	return "mock convert", nil
+func (m *mockConvert) Convert() ([]string, error) {
+	return []string{"mock convert"}, nil
 }
 
 func TestConvert(t *testing.T) {
 	var tests = []*struct {
 		converter   Converter
-		expected    string
+		expected    []string
 		expectedErr error
 	}{
 		{
 			converter:   new(mockConvert),
-			expected:    "mock convert",
+			expected:    []string{"mock convert"},
 			expectedErr: nil,
 		},
 	}
