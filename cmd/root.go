@@ -18,6 +18,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/RickyJian/gocc"
 	"github.com/spf13/cobra"
 )
 
@@ -26,6 +27,8 @@ const (
 	source = "source"
 	// source defines persistence flag `destination`
 	destination = "destination"
+	// textConfigPath defines chinese mapping file directory
+	textConfigPath = "text"
 )
 
 var (
@@ -37,76 +40,79 @@ var (
 
 func init() {
 	// bind sub command
-	rootCmd.AddCommand(s2t)
-	rootCmd.AddCommand(t2s)
-	rootCmd.AddCommand(s2tw)
-	rootCmd.AddCommand(tw2s)
-	rootCmd.AddCommand(s2hk)
-	rootCmd.AddCommand(hk2s)
-	rootCmd.AddCommand(s2twp)
-	rootCmd.AddCommand(tw2sp)
-	rootCmd.AddCommand(t2tw)
-	rootCmd.AddCommand(t2hk)
+	rootCmd.AddCommand(subS2T)
+	rootCmd.AddCommand(subT2S)
+	rootCmd.AddCommand(subS2TW)
+	rootCmd.AddCommand(subTW2S)
+	rootCmd.AddCommand(subS2HK)
+	rootCmd.AddCommand(subHK2S)
+	rootCmd.AddCommand(subS2TWP)
+	rootCmd.AddCommand(subTW2SP)
+	rootCmd.AddCommand(subT2TW)
+	rootCmd.AddCommand(subT2HK)
 
-	// bind and check s2t flag
-	s2t.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
-	s2t.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
-	s2t.MarkFlagRequired(source)
-	s2t.MarkFlagRequired(destination)
+	// bind and check subS2T flag
+	subS2T.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	subS2T.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	subS2T.MarkFlagRequired(source)
+	subS2T.MarkFlagRequired(destination)
 
-	// bind and check t2s flag
-	t2s.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
-	t2s.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
-	t2s.MarkFlagRequired(source)
-	t2s.MarkFlagRequired(destination)
+	// bind and check subT2S flag
+	subT2S.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	subT2S.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	subT2S.MarkFlagRequired(source)
+	subT2S.MarkFlagRequired(destination)
 
-	// bind and check s2tw flag
-	s2tw.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
-	s2tw.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
-	s2tw.MarkFlagRequired(source)
-	s2tw.MarkFlagRequired(destination)
+	// bind and check subS2TW flag
+	subS2TW.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	subS2TW.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	subS2TW.MarkFlagRequired(source)
+	subS2TW.MarkFlagRequired(destination)
 
-	// bind and check tw2s flag
-	tw2s.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
-	tw2s.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
-	tw2s.MarkFlagRequired(source)
-	tw2s.MarkFlagRequired(destination)
+	// bind and check subTW2S flag
+	subTW2S.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	subTW2S.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	subTW2S.MarkFlagRequired(source)
+	subTW2S.MarkFlagRequired(destination)
 
-	// bind and check s2hk flag
-	s2hk.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
-	s2hk.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
-	s2hk.MarkFlagRequired(source)
-	s2hk.MarkFlagRequired(destination)
+	// bind and check subS2HK flag
+	subS2HK.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	subS2HK.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	subS2HK.MarkFlagRequired(source)
+	subS2HK.MarkFlagRequired(destination)
 
-	// bind and check hk2s flag
-	hk2s.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
-	hk2s.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
-	hk2s.MarkFlagRequired(source)
-	hk2s.MarkFlagRequired(destination)
+	// bind and check subHK2S flag
+	subHK2S.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	subHK2S.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	subHK2S.MarkFlagRequired(source)
+	subHK2S.MarkFlagRequired(destination)
 
-	// bind and check s2twp flag
-	s2twp.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
-	s2twp.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
-	s2twp.MarkFlagRequired(source)
-	s2twp.MarkFlagRequired(destination)
+	// bind and check subS2TWP flag
+	subS2TWP.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	subS2TWP.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	subS2TWP.MarkFlagRequired(source)
+	subS2TWP.MarkFlagRequired(destination)
 
-	// bind and check tw2sp flag
-	tw2sp.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
-	tw2sp.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
-	tw2sp.MarkFlagRequired(source)
-	tw2sp.MarkFlagRequired(destination)
+	// bind and check subTW2SP flag
+	subTW2SP.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	subTW2SP.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	subTW2SP.MarkFlagRequired(source)
+	subTW2SP.MarkFlagRequired(destination)
 
-	// bind and check t2tw flag
-	t2tw.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
-	t2tw.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
-	t2tw.MarkFlagRequired(source)
-	t2tw.MarkFlagRequired(destination)
+	// bind and check subT2TW flag
+	subT2TW.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	subT2TW.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	subT2TW.MarkFlagRequired(source)
+	subT2TW.MarkFlagRequired(destination)
 
-	// bind and check t2hk flag
-	t2hk.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
-	t2hk.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
-	t2hk.MarkFlagRequired(source)
-	t2hk.MarkFlagRequired(destination)
+	// bind and check subT2HK flag
+	subT2HK.Flags().StringVarP(&src, source, "s", "", "input file location (REQUIRED)")
+	subT2HK.Flags().StringVarP(&dest, destination, "d", "", "output file location (REQUIRED)")
+	subT2HK.MarkFlagRequired(source)
+	subT2HK.MarkFlagRequired(destination)
+
+	// init chinese config
+	gocc.SetConfigPath(textConfigPath)
 }
 
 // rootCmd represents the base command when called without any subcommands
