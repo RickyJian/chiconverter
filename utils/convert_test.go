@@ -12,11 +12,9 @@ func (m *mockConvert) Convert() (string, error) {
 	return "mock convert", nil
 }
 
-type mockConvertUnimplemented struct{}
-
 func TestConvert(t *testing.T) {
 	var tests = []*struct {
-		converter   interface{}
+		converter   Converter
 		expected    string
 		expectedErr error
 	}{
@@ -24,11 +22,6 @@ func TestConvert(t *testing.T) {
 			converter:   new(mockConvert),
 			expected:    "mock convert",
 			expectedErr: nil,
-		},
-		{
-			converter:   new(mockConvertUnimplemented),
-			expected:    "",
-			expectedErr: ErrConvertUnimplemented,
 		},
 	}
 	for _, test := range tests {
