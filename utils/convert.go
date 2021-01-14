@@ -69,7 +69,7 @@ LOOP:
 		case <-ctx.Done():
 			break LOOP
 		default:
-			go func(batch int, bs []byte) {
+			go func(ctx context.Context, batch int, bs []byte, process ConvertFunc) {
 				select {
 				case <-ctx.Done():
 					// if error occur do nothing
@@ -81,10 +81,10 @@ LOOP:
 							text:  text,
 							err:   err,
 						}
-					}(ctx, batch, bs, processingFunc)
+					}(ctx, batch, bs, process)
 				}
 				<-worker
-			}(i, bs)
+			}(ctx, i, bs, processingFunc)
 		}
 	}
 	<-done

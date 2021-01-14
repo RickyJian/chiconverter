@@ -31,13 +31,12 @@ func TestConvert(t *testing.T) {
 	}
 }
 
-
 func TestBatch(t *testing.T) {
 	mockConvertFunc := func(in string) (string, error) {
 		return in, nil
 	}
 	var tests = []*struct {
-		src  string
+		src string
 	}{
 		{
 			src: "../test/thousand_character_classic_cht",
