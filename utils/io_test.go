@@ -31,6 +31,11 @@ func TestReadAll(t *testing.T) {
 				[]byte("寒來暑往，秋收冬藏。"),
 			},
 		},
+		{
+			src:         "../test",
+			expected:    [][]byte{},
+			expectedErr: ErrSourceIsNotFile,
+		},
 	}
 	for _, test := range tests {
 		texts, err := ReadAll(test.src)

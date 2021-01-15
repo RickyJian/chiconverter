@@ -26,6 +26,8 @@ var (
 	ErrFileOutOfSize = errors.New("file out of size")
 	// ErrEmptyFile describes empty file
 	ErrEmptyFile = errors.New("empty file")
+	// ErrSourceIsNotFile describes source is not file
+	ErrSourceIsNotFile = errors.New("source is not file")
 	// ErrDestinationIsNotDir describes is not directory
 	ErrDestinationIsNotDir = errors.New("destination is not directory")
 )
@@ -41,6 +43,8 @@ func ReadAll(src string) ([][]byte, error) {
 	fileStat, err := file.Stat()
 	if err != nil {
 		return nil, fmt.Errorf("failed to read file: %w", err)
+	} else if mode := fileStat.Mode(); !mode.IsRegular() {
+		return nil, ErrSourceIsNotFile
 	} else if size := fileStat.Size(); size > MaxFileSize {
 		return nil, ErrFileOutOfSize
 	} else if size == 0 {
