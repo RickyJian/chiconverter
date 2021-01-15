@@ -40,3 +40,5 @@ func TestReadAll(t *testing.T) {
 		}
 	}
 }
+
+// TODO: test `DestFileName`

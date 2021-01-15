@@ -6,6 +6,14 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
+	"strings"
+	"time"
+)
+
+const (
+	underscore = "_"
+	timeLayout = "2006-01-02_15:04:05"
 )
 
 var (
@@ -18,6 +26,8 @@ var (
 	ErrFileOutOfSize = errors.New("file out of size")
 	// ErrEmptyFile describes empty file
 	ErrEmptyFile = errors.New("empty file")
+	// ErrDestinationIsNotDir describes is not directory
+	ErrDestinationIsNotDir = errors.New("destination is not directory")
 )
 
 // ReadAll read all text from file
@@ -53,4 +63,24 @@ func ReadAll(src string) ([][]byte, error) {
 		text = append(text, t)
 	}
 	return text, nil
+}
+
+// DestFileName returns destination file name
+func DestFileName(src, dest string) (string, error) {
+	if fileStat, err := os.Stat(dest); err != nil {
+		return "", fmt.Errorf("invalid path: %w", err)
+	} else if mode := fileStat.Mode(); mode.IsRegular() || !fileStat.IsDir() {
+		return "", ErrDestinationIsNotDir
+	}
+
+	fileExt := filepath.Ext(src)
+	var builder strings.Builder
+	builder.WriteString(filepath.Base(src[:len(src)-len(fileExt)]))
+	builder.WriteString(underscore)
+	builder.WriteString(time.Now().Format(timeLayout))
+	if fileExt != "" {
+		builder.WriteString(fileExt)
+	}
+	path, _ := filepath.Abs(filepath.Join(dest, builder.String()))
+	return path, nil
 }
