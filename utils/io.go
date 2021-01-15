@@ -46,7 +46,11 @@ func ReadAll(src string) ([][]byte, error) {
 		} else if err != nil {
 			return nil, fmt.Errorf("falied to read text: %w", err)
 		}
-		text = append(text, words)
+		t := make([]byte, len(words))
+		// use `copy` to prevent first index of `text` change
+		// to last index of bytes when read the last line
+		copy(t, words)
+		text = append(text, t)
 	}
 	return text, nil
 }

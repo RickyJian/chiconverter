@@ -35,10 +35,8 @@ func TestReadAll(t *testing.T) {
 	for _, test := range tests {
 		texts, err := ReadAll(test.src)
 		assert.Equal(t, test.expectedErr, err)
-		if err != nil {
-			for i, text := range texts {
-				assert.Equal(t, test.expected[i], text)
-			}
+		if err == nil {
+			assert.Equal(t, test.expected, texts)
 		}
 	}
 }
