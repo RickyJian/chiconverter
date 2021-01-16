@@ -37,24 +37,31 @@ const (
 
 // run defines subcommand run function
 var run = func(cmd *cobra.Command, args []string) {
+	log.Info().Msg("convert start")
+	defer log.Info().Msg("convert finish")
+
 	destName, err := utils.DestFileName(src, dest)
 	if err != nil {
-		log.Fatal().Msg(err.Error())
+		log.Error().Msg(err.Error())
+		return
 	}
 
 	texts, err := utils.ReadAll(src)
 	if err != nil {
-		log.Fatal().Msg(err.Error())
+		log.Error().Msg(err.Error())
+		return
 	}
 
 	contents, err := utils.Convert(NewConverter(cmd.Name(), texts))
 	if err != nil {
-		log.Fatal().Msg(err.Error())
+		log.Error().Msg(err.Error())
+		return
 	}
 
 	file, err := os.Create(destName)
 	if err != nil {
-		log.Fatal().Msg(err.Error())
+		log.Error().Msg(err.Error())
+		return
 	}
 	defer file.Close()
 

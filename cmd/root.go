@@ -123,7 +123,7 @@ func init() {
 	// init log setting
 	output := zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: utils.LogTimeLayout}
 	output.FormatLevel = func(i interface{}) string {
-		return strings.ToUpper(fmt.Sprintf("| %-6s|", i))
+		return strings.ToUpper(fmt.Sprintf("|  %-6s|", i))
 	}
 	output.FormatMessage = func(i interface{}) string {
 		return fmt.Sprintf("%s", i)
