@@ -13,7 +13,6 @@ import (
 
 const (
 	underscore = "_"
-	timeLayout = "2006-01-02_15:04:05"
 )
 
 var (
@@ -81,7 +80,7 @@ func DestFileName(src, dest string) (string, error) {
 	var builder strings.Builder
 	builder.WriteString(filepath.Base(src[:len(src)-len(fileExt)]))
 	builder.WriteString(underscore)
-	builder.WriteString(time.Now().Format(timeLayout))
+	builder.WriteString(time.Now().Format(FileTimeLayout))
 	if fileExt != "" {
 		builder.WriteString(fileExt)
 	}
