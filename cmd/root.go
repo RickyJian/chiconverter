@@ -16,9 +16,13 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"os"
+	"strings"
 
+	"chiconverter/utils"
 	"github.com/RickyJian/gocc"
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 )
 
@@ -36,6 +40,8 @@ var (
 	src string
 	// dest defines output location
 	dest string
+	// log defines global log
+	log zerolog.Logger
 )
 
 func init() {
@@ -113,6 +119,22 @@ func init() {
 
 	// init chinese config
 	gocc.SetConfigPath(textConfigPath)
+
+	// init log setting
+	output := zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: utils.LogTimeLayout}
+	output.FormatLevel = func(i interface{}) string {
+		return strings.ToUpper(fmt.Sprintf("| %-6s|", i))
+	}
+	output.FormatMessage = func(i interface{}) string {
+		return fmt.Sprintf("%s", i)
+	}
+	output.FormatFieldName = func(i interface{}) string {
+		return fmt.Sprintf("FIELD: %s:", i)
+	}
+	output.FormatFieldValue = func(i interface{}) string {
+		return fmt.Sprintf("%s", i)
+	}
+	log = zerolog.New(output).With().Timestamp().Logger()
 }
 
 // rootCmd represents the base command when called without any subcommands
