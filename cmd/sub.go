@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"chiconverter/utils"
+	"github.com/RickyJian/chiconverter/utils"
 	"github.com/RickyJian/gocc"
 	"github.com/spf13/cobra"
 )

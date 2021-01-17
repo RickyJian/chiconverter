@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"chiconverter/utils"
+	"github.com/RickyJian/chiconverter/utils"
 	"github.com/RickyJian/gocc"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"

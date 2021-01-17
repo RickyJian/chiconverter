@@ -1,7 +1,7 @@
 package main
 
 import (
-	"chiconverter/cmd"
+	"github.com/RickyJian/chiconverter/cmd"
 )
 
 func main() {

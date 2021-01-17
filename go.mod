@@ -1,4 +1,4 @@
-module chiconverter
+module github.com/RickyJian/chiconverter
 
 go 1.15
 
