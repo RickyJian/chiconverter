@@ -16,8 +16,6 @@ const (
 	source = "source"
 	// source defines persistence flag `destination`
 	destination = "destination"
-	// textConfigPath defines chinese mapping file directory
-	textConfigPath = "text"
 )
 
 var (
@@ -41,6 +39,7 @@ func init() {
 	rootCmd.AddCommand(subTW2SP)
 	rootCmd.AddCommand(subT2TW)
 	rootCmd.AddCommand(subT2HK)
+	rootCmd.AddCommand(subDownload)
 
 	// bind and check subS2T flag
 	subS2T.Flags().StringVarP(&src, source, "s", "", "input file name (REQUIRED)")

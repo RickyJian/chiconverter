@@ -1,9 +1,14 @@
 package cmd
 
 import (
+	"archive/tar"
 	"bufio"
+	"compress/gzip"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
+	"path/filepath"
 
 	"chiconverter/utils"
 	"github.com/RickyJian/gocc"
@@ -13,6 +18,10 @@ import (
 const (
 	// newLineDelimiter defines new line delimiter
 	newLineDelimiter = '\n'
+	// textConfigURL defines text config url
+	textConfigURL = "https://github.com/RickyJian/chiconverter/blob/master/text/gocc.tar.gz?raw=true"
+	// textConfigZipName defines text config compressed file name
+	textConfigZipName = ".gocc.tar.gz"
 	// s2t defines simplified to traditional subcommand description
 	s2t = "s2t"
 	// t2s defines traditional to simplified subcommand description
@@ -300,4 +309,101 @@ func (c T2HK) Convert() (map[int]string, error) {
 		return map[int]string{}, err
 	}
 	return utils.Batch(c, cvt.Convert)
+}
+
+// subDownload defines sub command to remove text config and install the new one
+var subDownload = &cobra.Command{
+	Use:   "download",
+	Short: "download text config",
+	Long:  `remove current text config and download the new one`,
+	Run: func(cmd *cobra.Command, args []string) {
+		file, _ := os.Stat(textConfigPath)
+		if fileMode := file.Mode(); fileMode.IsDir() || fileMode.IsRegular() {
+			log.Info().Msg("config files exist, prepare to remove")
+			if err := os.RemoveAll(textConfigPath); err != nil {
+				log.Error().Str("err", err.Error()).Msg("failed to remove config files")
+				return
+			}
+			log.Info().Msg("remove config files success")
+		}
+
+		log.Info().Msg("prepare to download text config")
+		defer log.Info().Msg("download finish")
+
+		// TODO: batch create files and add progress bar
+		resp, err := http.Get(textConfigURL)
+		if err != nil {
+			log.Error().Str("err", err.Error()).Msg("failed to get text config")
+			return
+		}
+		defer resp.Body.Close()
+
+		zipFileName := filepath.Join(textConfigPath, textConfigZipName)
+		if err := os.MkdirAll(textConfigPath, os.ModePerm); err != nil {
+			log.Error().Str("err", err.Error()).Msg("failed to create text config directory")
+			return
+		} else if file, err := os.Create(zipFileName); err != nil {
+			log.Error().Str("err", err.Error()).Msg("failed to create text config zip")
+			return
+		} else if _, err := io.Copy(file, resp.Body); err != nil {
+			log.Error().Str("err", err.Error()).Msg("failed to create text config zip")
+			return
+		}
+		defer func() {
+			if err := os.RemoveAll(zipFileName); err != nil {
+				log.Error().Str("err", err.Error()).Msg("failed to remove download zip")
+			}
+		}()
+
+		zipFile, err := os.Open(zipFileName)
+		if err != nil {
+			log.Error().Str("err", err.Error()).Msg("text config not found")
+			return
+		}
+		zipReader, err := gzip.NewReader(zipFile)
+		if err != nil {
+			log.Error().Str("err", err.Error()).Msg("failed to unzip text config file")
+			return
+		}
+		defer zipReader.Close()
+
+		tarReader := tar.NewReader(zipReader)
+		for {
+			header, err := tarReader.Next()
+			if err == io.EOF {
+				break
+			} else if err != nil {
+				log.Error().Str("err", err.Error()).Msg("failed to unzip text config file")
+				return
+			}
+
+			switch header.Typeflag {
+			case tar.TypeDir:
+				if err := os.MkdirAll(filepath.Join(textConfigPath, header.Name), os.ModePerm); err != nil {
+					log.Error().
+						Str("err", err.Error()).
+						Str("directory", header.Name).
+						Msg("failed to create directory")
+					return
+				}
+			case tar.TypeReg:
+				if file, err := os.Create(filepath.Join(textConfigPath, header.Name)); err != nil {
+					log.Error().
+						Str("err", err.Error()).
+						Str("file", header.Name).
+						Msg("failed to create text config files")
+					return
+				} else if _, err := io.Copy(file, tarReader); err != nil {
+					log.Error().
+						Str("err", err.Error()).
+						Str("file", header.Name).
+						Msg("failed to create text config files")
+					return
+				}
+			default:
+				log.Error().Str("file name", header.Name).Msg("unknown file type")
+				return
+			}
+		}
+	},
 }
