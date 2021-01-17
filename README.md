@@ -2,6 +2,12 @@
 
 ChiConverter is a command line tool to convert chinese from Traditional to Simplified or Simplified to Traditional.
 
+## Install 
+
+```
+$ go install github.com/RickyJian/chiconverter
+```
+
 ## Command
 
 | Command | Description |
